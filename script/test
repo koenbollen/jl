@@ -1,0 +1,15 @@
+#!/bin/sh
+set -e
+cd "$(dirname "$0")/.."
+
+go test ./...
+
+go install
+(
+  cd examples
+  export JL_OPTS="--no-color"
+  PATH="${PATH}:$(pwd)/mocks"
+  export PATH
+  export GOPATH="$TMPDIR/go"
+  cram -E --verbose --indent=4 ../README.md ./*.md
+)

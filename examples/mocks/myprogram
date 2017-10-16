@@ -1,0 +1,3 @@
+#!/bin/sh
+
+echo '{"message": "Hello, world!!", "severity": "info"}'

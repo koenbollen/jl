@@ -1,0 +1,2 @@
+#!/bin/sh
+echo 'monitor-1331628357-qn2vp mailer-monitor-monitor {"labels": {"git_rev": "da161cc"}, "message": "context ended: NL/2017-09-28/digest", "origin": "EmailSentMonitor", "severity": "INFO", "timestamp": "2017-09-28T05:56:36Z"}'

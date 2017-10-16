@@ -1,0 +1,3 @@
+#!/bin/sh
+
+echo '{"level":"info","message":"logger construction succeeded","foo":"bar"}'
