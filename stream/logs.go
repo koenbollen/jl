@@ -70,6 +70,7 @@ func (l *stream) run() {
 func (l *stream) parse(raw []byte) json.RawMessage {
 	var s scanner.Scanner
 	s.Init(bytes.NewReader(raw))
+	s.Error = func(s *scanner.Scanner, msg string) {}
 	depth := 0
 	start := -1
 	end := -1

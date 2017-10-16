@@ -2,6 +2,18 @@
 
 
 [[projects]]
+  name = "github.com/docopt/docopt-go"
+  packages = ["."]
+  revision = "784ddc588536785e7299f7272f39101f7faccc3f"
+  version = "0.6.2"
+
+[[projects]]
+  name = "github.com/mattn/go-isatty"
+  packages = ["."]
+  revision = "0360b2af4f38e8d38c7fce2a9f4e702702d73a39"
+  version = "v0.0.3"
+
+[[projects]]
   name = "github.com/tidwall/gjson"
   packages = ["."]
   revision = "5a69e67cfd8f6f9b0044ed49f5079d0eeed28653"
@@ -13,9 +25,15 @@
   packages = ["."]
   revision = "1731857f09b1f38450e2c12409748407822dc6be"
 
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/sys"
+  packages = ["unix"]
+  revision = "686000749eaec0b8855b8eef5336cf63899fe51d"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "9efb70ddea080bfcd37ee63688d5a5508f51da2e63bb542832d809b3cce51d3c"
+  inputs-digest = "7b6c0909299a7c1e0d690aa7d3cd532c33b751d8afb38edae78720c452940129"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -22,10 +22,10 @@ The `jl` project is in early development
 
 **Next steps:**
 
-- [ ] CI
-- [ ] Enhance this README
-- [ ] CLI options/toggles/flags, also support environment defaults.
+- [X] CI
+- [X] CLI options/toggles/flags, also support environment defaults
 - [ ] Support stacktraces
-- [ ] Colorize output, like [bunyan](https://github.com/trentm/node-bunyan) does.
+- [ ] Colorize output, like [bunyan](https://github.com/trentm/node-bunyan) does
 - [ ] More examples/tests to make sure to be compatible with existing tooling
+- [ ] Enhance this README and the --help
 - [ ] Ship it! :shipit:
