@@ -4,6 +4,8 @@ cd "$(dirname "$0")/.."
 
 go test ./...
 
+gometalinter --vendor ./...
+
 go install
 (
   cd examples

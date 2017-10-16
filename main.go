@@ -41,8 +41,8 @@ func main() {
 
 		// unable to parse entry, outputting raw line:
 		if err != nil || entry.Message == "" {
-			os.Stdout.Write(line.Raw)
-			os.Stdout.Write(structure.NewLine)
+			writeBytes(line.Raw)
+			writeBytes(structure.NewLine)
 			continue
 		}
 
@@ -57,6 +57,14 @@ func main() {
 
 	if err := s.Err(); err != nil {
 		fmt.Fprintf(os.Stderr, "broken pipe: %v\n", err)
+	}
+}
+
+func writeBytes(line []byte) {
+	_, err := os.Stdout.Write(line)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "broken pipe: %v\n", err)
+		os.Exit(1)
 	}
 }
 

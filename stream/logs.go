@@ -28,10 +28,9 @@ type Stream interface {
 }
 
 type stream struct {
-	scanner   *bufio.Scanner
-	result    chan *Line
-	lastError error
-	stop      chan struct{}
+	scanner *bufio.Scanner
+	result  chan *Line
+	stop    chan struct{}
 }
 
 // New will construct a new Stream and start it.
@@ -115,7 +114,7 @@ func (l *stream) Err() error {
 
 func split(raw, json []byte) (prefix, suffix []byte) {
 	prefix, suffix = nil, nil
-	if json != nil && len(json) > 0 {
+	if len(json) > 0 {
 		parts := bytes.SplitN(raw, json, 2)
 		if len(parts) >= 1 && len(parts[0]) > 0 {
 			prefix = parts[0]

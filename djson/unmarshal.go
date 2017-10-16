@@ -9,6 +9,10 @@ import (
 	"github.com/tidwall/gjson"
 )
 
+// Unmarshal will try to load JSON from the given data into val. It'll read
+// from the struct tags of the given val and look for the 'djson' tag which
+// can supply multiple possible fields a JSON key can be. If a json key match
+// with any of the tags it'll set the value.
 func Unmarshal(data []byte, val interface{}) {
 	elem := reflect.TypeOf(val).Elem()
 	for i := 0; i < elem.NumField(); i++ {
