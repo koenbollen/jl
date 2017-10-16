@@ -16,7 +16,8 @@ func main() {
 	files, color, showPrefix, showSuffix, showFields := cli()
 	formatter, err := structure.NewFormatter(os.Stdout, "")
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "invalid format: %v", err)
+		fmt.Fprintf(os.Stderr, "invalid format: %v\n", err)
+		os.Exit(1)
 	}
 
 	formatter.Colorize = color
@@ -26,7 +27,8 @@ func main() {
 
 	r, err := openFiles(files)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "failed to open file: %v", err)
+		fmt.Fprintf(os.Stderr, "failed to open file: %v\n", err)
+		os.Exit(1)
 	}
 	s := stream.New(r)
 	for line := range s.Lines() {
@@ -48,13 +50,13 @@ func main() {
 		prefix, suffix := split(line.Raw, line.JSON)
 		err = formatter.Format(entry, line.JSON, prefix, suffix)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "broken pipe: %v", err)
+			fmt.Fprintf(os.Stderr, "broken pipe: %v\n", err)
 			break
 		}
 	}
 
 	if err := s.Err(); err != nil {
-		fmt.Fprintf(os.Stderr, "broken pipe: %v", err)
+		fmt.Fprintf(os.Stderr, "broken pipe: %v\n", err)
 	}
 }
 
