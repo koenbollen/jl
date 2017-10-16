@@ -1,0 +1,13 @@
+version: 2
+jobs:
+  build:
+    working_directory: /go/src/github.com/koenbollen/jl
+    docker:
+      - image: circleci/golang:1.9
+    steps:
+      - checkout
+      - run: sudo apt-get update && sudo apt-get install -y python3 python3-pip
+      - run: pip3 install --user cram
+      - run: echo 'export PATH="${PATH}:${HOME}/.local/bin"' >> $BASH_ENV
+      - run: ./script/bootstrap
+      - run: ./script/test
