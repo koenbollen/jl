@@ -79,6 +79,12 @@ func TestLeadingText(t *testing.T) {
 	})
 }
 
+func TestBacktick(t *testing.T) {
+	test(t, "Single backtick: `", &stream.Line{
+		Raw: []byte("Single backtick: `"),
+	})
+}
+
 func TestClose(t *testing.T) {
 	t.Parallel()
 	s := stream.New(iotest.TimeoutReader(strings.NewReader("one\ntwo\n")))

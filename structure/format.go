@@ -34,9 +34,10 @@ type Formatter struct {
 	output   io.Writer
 	template *template.Template
 
-	showFields bool
-	showPrefix bool
-	showSuffix bool
+	Colorize   bool
+	ShowFields bool
+	ShowPrefix bool
+	ShowSuffix bool
 }
 
 // NewFormatter compiles the given fmt as a go template and returns a Formatter
@@ -52,16 +53,17 @@ func NewFormatter(w io.Writer, fmt string) (*Formatter, error) {
 	return &Formatter{
 		output:     w,
 		template:   tmpl,
-		showFields: true,
-		showPrefix: true,
-		showSuffix: true,
+		Colorize:   false,
+		ShowFields: true,
+		ShowPrefix: true,
+		ShowSuffix: true,
 	}, nil
 }
 
 // Format takes a structured log entry and formats it according the template.
 func (f *Formatter) Format(entry *Entry, raw json.RawMessage, prefix, suffix []byte) error {
 	f.enhance(entry)
-	if f.showPrefix && prefix != nil && len(prefix) > 0 {
+	if f.ShowPrefix && prefix != nil && len(prefix) > 0 {
 		_, err := f.output.Write(prefix)
 		if err != nil {
 			return err
@@ -71,10 +73,10 @@ func (f *Formatter) Format(entry *Entry, raw json.RawMessage, prefix, suffix []b
 	if err != nil {
 		return err
 	}
-	if f.showFields {
+	if f.ShowFields {
 		f.outputFields(entry, raw)
 	}
-	if f.showSuffix && suffix != nil && len(suffix) > 0 {
+	if f.ShowSuffix && suffix != nil && len(suffix) > 0 {
 		_, err = f.output.Write(suffix)
 		if err != nil {
 			return err
