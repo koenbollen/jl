@@ -1,7 +1,6 @@
 package stream_test
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"reflect"
@@ -46,7 +45,7 @@ func test(t *testing.T, input string, expected *stream.Line) {
 	t.Helper()
 	s := stream.New(strings.NewReader(input))
 	result := <-s.Lines()
-	if bytes.Compare(result.Raw, expected.Raw) != 0 || bytes.Compare(result.JSON, expected.JSON) != 0 {
+	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("line didnt match, got %q expected %q", result, expected)
 	}
 }
@@ -67,15 +66,17 @@ func TestPlainText(t *testing.T) {
 
 func TestTrailingText(t *testing.T) {
 	test(t, `{"json": 1} Hello, world!!`, &stream.Line{
-		Raw:  []byte(`{"json": 1} Hello, world!!`),
-		JSON: json.RawMessage(`{"json": 1}`),
+		Raw:    []byte(`{"json": 1} Hello, world!!`),
+		JSON:   json.RawMessage(`{"json": 1}`),
+		Suffix: []byte(` Hello, world!!`),
 	})
 }
 
 func TestLeadingText(t *testing.T) {
 	test(t, `Sup? {"json": 2}`, &stream.Line{
-		Raw:  []byte(`Sup? {"json": 2}`),
-		JSON: json.RawMessage(`{"json": 2}`),
+		Raw:    []byte(`Sup? {"json": 2}`),
+		JSON:   json.RawMessage(`{"json": 2}`),
+		Prefix: []byte(`Sup? `),
 	})
 }
 

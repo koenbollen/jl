@@ -73,9 +73,7 @@ func (f *Formatter) Format(entry *Entry, raw json.RawMessage, prefix, suffix []b
 	if err != nil {
 		return err
 	}
-	if f.ShowFields {
-		f.outputFields(entry, raw)
-	}
+	f.outputFields(entry, raw)
 	if f.ShowSuffix && suffix != nil && len(suffix) > 0 {
 		_, err = f.output.Write(suffix)
 		if err != nil {
@@ -94,6 +92,9 @@ func (f *Formatter) enhance(entry *Entry) {
 }
 
 func (f *Formatter) outputFields(entry *Entry, raw json.RawMessage) {
+	if !f.ShowFields {
+		return
+	}
 	fields := make(map[string]interface{})
 	err := json.Unmarshal(raw, &fields)
 
@@ -112,7 +113,7 @@ func (f *Formatter) outputFields(entry *Entry, raw json.RawMessage) {
 			if _, ok := value.([]interface{}); ok {
 				continue
 			}
-			if ix := sort.SearchStrings(fieldsToSkip, key); ix >= len(fieldsToSkip) || fieldsToSkip[ix] != key {
+			if !shouldSkipField(key) {
 				output = append(output, fmt.Sprintf("%s=%v", key, value))
 			}
 		}
@@ -121,4 +122,9 @@ func (f *Formatter) outputFields(entry *Entry, raw json.RawMessage) {
 			fmt.Fprintf(f.output, " %v", output)
 		}
 	}
+}
+
+func shouldSkipField(field string) bool {
+	ix := sort.SearchStrings(fieldsToSkip, field)
+	return ix < len(fieldsToSkip) && fieldsToSkip[ix] == field
 }

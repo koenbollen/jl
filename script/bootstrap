@@ -10,4 +10,9 @@ command -v cram >/dev/null 2>&1 || {
 command -v dep >/dev/null 2>&1 || {
   go get -u github.com/golang/dep/cmd/dep
 }
+
+command -v gometalinter >/dev/null 2>&1 || {
+  go get -u github.com/alecthomas/gometalinter
+  gometalinter --install --update
+}
 dep ensure

@@ -19,12 +19,12 @@ func TestUnmarshal(t *testing.T) {
 		t.Error("failed to set .Message to 'Hi'")
 	}
 
-	json.Unmarshal([]byte(`{"message": "Hi"}`), &val)
+	_ = json.Unmarshal([]byte(`{"message": "Hi"}`), &val)
 	if val.Message != "Hi" {
 		t.Error("failed to set .Message to 'Hi'")
 	}
 
-	if val.NotUsed == true {
+	if val.NotUsed {
 		t.Error("unused field .NotUsed somehow set to true")
 	}
 }
