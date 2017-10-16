@@ -7,6 +7,8 @@ import (
 	"sort"
 	"strings"
 	"text/template"
+
+	"github.com/fatih/color"
 )
 
 // DefaultTemplate is used when no template is given.
@@ -62,6 +64,7 @@ func NewFormatter(w io.Writer, fmt string) (*Formatter, error) {
 
 // Format takes a structured log entry and formats it according the template.
 func (f *Formatter) Format(entry *Entry, raw json.RawMessage, prefix, suffix []byte) error {
+	color.NoColor = !f.Colorize
 	f.enhance(entry)
 	if f.ShowPrefix && prefix != nil && len(prefix) > 0 {
 		_, err := f.output.Write(prefix)
@@ -89,6 +92,10 @@ func (f *Formatter) enhance(entry *Entry) {
 		entry.Severity = level
 	}
 	entry.Severity = strings.ToUpper(entry.Severity)
+	if color, ok := severityColors[entry.Severity]; ok {
+		entry.Severity = color(entry.Severity)
+	}
+	entry.Message = messageColor(entry.Message)
 }
 
 func (f *Formatter) outputFields(entry *Entry, raw json.RawMessage) {
