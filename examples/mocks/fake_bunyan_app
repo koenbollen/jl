@@ -1,4 +1,9 @@
 #!/bin/sh
 
+if [ "$1" = "--error" ]; then
+  printf '{"name":"myserver","hostname":"banana.local","err":{"stack":"TypeError: boom\\n    at Object.<anonymous> (/Users/trentm/tm/node-bunyan/examples/err.js:15:9)\\n    at Module._compile (module.js:411:26)\\n    at Object..js (module.js:417:10)\\n    at Module.load (module.js:343:31)\\n    at Function._load (module.js:302:12)\\n    at Array.0 (module.js:430:10)\\n    at EventEmitter._tickCallback (node.js:126:26)","name":"TypeError","message":"boom"},"level":40,"msg":"operation went boom: TypeError: boom","time":"2012-02-02T04:42:53.206Z","v":0}\n'
+  exit
+fi
+
 echo '{"name":"myapp","hostname":"banana.local","pid":40161,"level":30,"msg":"hi","time":"2013-01-04T18:46:23.851Z","v":0}'
 echo '{"name":"myapp","hostname":"banana.local","pid":40161,"level":40,"lang":"fr","msg":"au revoir","time":"2013-01-04T18:46:23.853Z","v":0}'
