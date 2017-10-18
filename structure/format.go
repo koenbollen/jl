@@ -66,23 +66,29 @@ func NewFormatter(w io.Writer, fmt string) (*Formatter, error) {
 func (f *Formatter) Format(entry *Entry, raw json.RawMessage, prefix, suffix []byte) error {
 	color.NoColor = !f.Colorize
 	f.enhance(entry)
-	if f.ShowPrefix && prefix != nil && len(prefix) > 0 {
-		_, err := f.output.Write(prefix)
-		if err != nil {
-			return err
-		}
-	}
-	err := f.template.Execute(f.output, entry)
+
+	err := f.outputSimple(prefix, f.ShowPrefix)
 	if err != nil {
 		return err
 	}
-	f.outputFields(entry, raw)
-	if f.ShowSuffix && suffix != nil && len(suffix) > 0 {
-		_, err = f.output.Write(suffix)
-		if err != nil {
-			return err
-		}
+
+	err = f.template.Execute(f.output, entry)
+	if err != nil {
+		return err
 	}
+
+	f.outputFields(entry, raw)
+
+	err = f.outputSimple(suffix, f.ShowSuffix)
+	if err != nil {
+		return err
+	}
+
+	err = stacktrace(f.output, raw)
+	if err != nil {
+		return err
+	}
+
 	_, err = f.output.Write(NewLine)
 	return err
 }
@@ -96,6 +102,16 @@ func (f *Formatter) enhance(entry *Entry) {
 		entry.Severity = color(entry.Severity)
 	}
 	entry.Message = messageColor(entry.Message)
+}
+
+func (f *Formatter) outputSimple(txt []byte, toggle bool) error {
+	if toggle && txt != nil && len(txt) > 0 {
+		_, err := f.output.Write(txt)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (f *Formatter) outputFields(entry *Entry, raw json.RawMessage) {
@@ -120,7 +136,7 @@ func (f *Formatter) outputFields(entry *Entry, raw json.RawMessage) {
 			if _, ok := value.([]interface{}); ok {
 				continue
 			}
-			if !shouldSkipField(key) {
+			if !shouldSkipField(key, value) {
 				output = append(output, fmt.Sprintf("%s=%v", key, value))
 			}
 		}
@@ -131,7 +147,10 @@ func (f *Formatter) outputFields(entry *Entry, raw json.RawMessage) {
 	}
 }
 
-func shouldSkipField(field string) bool {
+func shouldSkipField(field string, value interface{}) bool {
+	if len(fmt.Sprintf("%v", value)) >= 24 {
+		return true
+	}
 	ix := sort.SearchStrings(fieldsToSkip, field)
 	return ix < len(fieldsToSkip) && fieldsToSkip[ix] == field
 }

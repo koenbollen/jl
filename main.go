@@ -10,6 +10,8 @@ import (
 	"github.com/koenbollen/jl/djson"
 	"github.com/koenbollen/jl/stream"
 	"github.com/koenbollen/jl/structure"
+
+	_ "github.com/koenbollen/jl/structure/stacktracers"
 )
 
 func main() {

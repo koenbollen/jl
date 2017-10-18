@@ -1,3 +1,7 @@
 #!/bin/sh
 
+if [ "$1" = "--error" ]; then
+  printf '{"level":"error","msg":"panic!","error":"timeout","stack":"go.uber.org/zap.Stack\\n\\tgo.uber.org/zap/field.go:191\\nmain.somefunction\\n\\tmain.go:11\\nmain.main\\n\\tmain.go:15"}'
+  exit
+fi
 echo '{"level":"info","message":"logger construction succeeded","foo":"bar"}'
