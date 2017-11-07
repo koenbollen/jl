@@ -1,3 +1,15 @@
 #!/bin/sh
 
-echo '{"message": "Hello, world!!", "severity": "info"}'
+if [ "$1" = "--mixed" ]; then
+  echo '{"message": "JSON message one", "severity": "debug"}'
+  echo 'line of plain text output'
+  echo '{"message": "JSON message two", "severity": "warning"}'
+elif [ "$1" = "--complex" ]; then
+  echo '{"message": "server started", "severity": "info", "timestamp": "2017-09-28T05:56:36Z", "port": "8080"}'
+  echo '{"message": "templates loaded", "severity": "debug", "timestamp": "2017-09-28T05:56:37Z"}'
+  echo '{"message": "request initialized", "severity": "trace", "timestamp": "2017-09-28T06:43:13Z", "user": "john"}'
+  echo '{"message": "failed to handle request", "severity": "error", "timestamp": "2017-09-28T06:43:14Z", "error": "no such template"}'
+else
+  echo '{"message": "Hello, world!!", "severity": "info"}'
+  echo '{"message": "skipping file", "severity": "warn"}'
+fi

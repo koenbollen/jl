@@ -12,8 +12,8 @@ Here is an example bunyan output:
 Passing the output of this command through `jl` will make it more readable.
 
     $ fake_bunyan_app | jl
-    [2013-01-04 18:46:23] INFO: hi
-    [2013-01-04 18:46:23] WARN: au revoir [lang=fr]
+    [2013-01-04 18:46:23]    INFO: hi
+    [2013-01-04 18:46:23] WARNING: au revoir [lang=fr]
 
 Yes, buynan supplies it's own CLI tool for development but `jl` should
 be compatible with more kinds of structured logging.

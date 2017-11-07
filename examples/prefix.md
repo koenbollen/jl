@@ -10,7 +10,7 @@ Passing this output through `jl` will include this prefix in the formatted
 result. As shown here:
 
     $ fake_stern mypod-549863668-1dqpx | jl
-    monitor-1331628357-qn2vp mailer-monitor-monitor [2017-09-28 05:56:36] INFO: context ended: NL/2017-09-28/digest [git_rev=da161cc origin=EmailSentMonitor]
+    monitor-1331628357-qn2vp mailer-monitor-monitor [2017-09-28 05:56:36]    INFO: context ended: NL/2017-09-28/digest [git_rev=da161cc origin=EmailSentMonitor]
 
 This behaviour can always be altered using `--skip-prefix`:
 
