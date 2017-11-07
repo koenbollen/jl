@@ -9,7 +9,7 @@ tried to detect this and format it neatly.
 Formatting buynan errors like it would:
 
     $ fake_bunyan_app --error | jl
-    [2012-02-02 04:42:53] WARN: operation went boom: TypeError: boom
+    [2012-02-02 04:42:53] WARNING: operation went boom: TypeError: boom
         TypeError: boom
             at Object.<anonymous> (/Users/trentm/tm/node-bunyan/examples/err.js:15:9)
             at Module._compile (module.js:411:26)
@@ -22,7 +22,7 @@ Formatting buynan errors like it would:
 Zap's stacktrace feature has no set key but will always start with the zap pacakge:
 
     $ some_zap_program --error | jl
-    ERROR: panic! [error=timeout]
+      ERROR: panic! [error=timeout]
         timeout
         go.uber.org/zap.Stack
           go.uber.org/zap/field.go:191

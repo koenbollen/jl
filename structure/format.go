@@ -15,12 +15,13 @@ import (
 const DefaultTemplate = `{{if .Timestamp}}[{{.Timestamp.Format "2006-01-02 15:04:05"}}] {{end}}{{if .Severity}}{{.Severity}}: {{end}}{{.Message}}`
 
 var severityMapping = map[string]string{
-	"10": "TRACE",
-	"20": "DEBUG",
-	"30": "INFO",
-	"40": "WARN",
-	"50": "ERROR",
-	"60": "FATAL",
+	"10":   "TRACE",
+	"20":   "DEBUG",
+	"30":   "INFO",
+	"40":   "WARNING",
+	"WARN": "WARNING",
+	"50":   "ERROR",
+	"60":   "FATAL",
 }
 
 var fieldsToSkip = []string{
@@ -94,13 +95,18 @@ func (f *Formatter) Format(entry *Entry, raw json.RawMessage, prefix, suffix []b
 }
 
 func (f *Formatter) enhance(entry *Entry) {
+	entry.Severity = strings.ToUpper(entry.Severity)
 	if level, ok := severityMapping[entry.Severity]; ok {
 		entry.Severity = level
 	}
-	entry.Severity = strings.ToUpper(entry.Severity)
-	if color, ok := severityColors[entry.Severity]; ok {
-		entry.Severity = color(entry.Severity)
+	if entry.Severity != "" {
+		padding := 7 - len(entry.Severity)
+		if color, ok := severityColors[entry.Severity]; ok {
+			entry.Severity = color(entry.Severity)
+		}
+		entry.Severity = strings.Repeat(" ", padding) + entry.Severity
 	}
+
 	entry.Message = messageColor(entry.Message)
 }
 
