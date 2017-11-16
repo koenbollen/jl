@@ -12,7 +12,7 @@ import (
 )
 
 // DefaultTemplate is used when no template is given.
-const DefaultTemplate = `{{if .Timestamp}}[{{.Timestamp.Format "2006-01-02 15:04:05"}}] {{end}}{{if .Severity}}{{.Severity}}: {{end}}{{.Message}}`
+const DefaultTemplate = `{{if .Timestamp}}[{{.Timestamp.Format "2006-01-02 15:04:05"}}] {{else if .RawTimestamp}}[{{.RawTimestamp}}] {{end}}{{if .Severity}}{{.Severity}}: {{end}}{{.Message}}`
 
 var severityMapping = map[string]string{
 	"10":   "TRACE",
@@ -95,6 +95,10 @@ func (f *Formatter) Format(entry *Entry, raw json.RawMessage, prefix, suffix []b
 }
 
 func (f *Formatter) enhance(entry *Entry) {
+	if entry.Timestamp != nil && entry.Timestamp.IsZero() {
+		entry.Timestamp = nil
+	}
+
 	entry.Severity = strings.ToUpper(entry.Severity)
 	if level, ok := severityMapping[entry.Severity]; ok {
 		entry.Severity = level

@@ -37,7 +37,8 @@ func main() {
 		var err error
 		entry := &structure.Entry{}
 		if line.JSON != nil && len(line.JSON) > 0 {
-			err = json.Unmarshal(line.JSON, entry)
+			var unused interface{}
+			err = json.Unmarshal(line.JSON, &unused)
 			djson.Unmarshal(line.JSON, entry)
 		}
 
