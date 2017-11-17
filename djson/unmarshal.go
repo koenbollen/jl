@@ -16,26 +16,33 @@ import (
 func Unmarshal(data []byte, val interface{}) {
 	elem := reflect.TypeOf(val).Elem()
 	for i := 0; i < elem.NumField(); i++ {
-		field := elem.FieldByIndex([]int{i})
-		keys, ok := field.Tag.Lookup("djson")
-		if !ok {
+		process(data, val, elem, i)
+	}
+}
+
+func process(data []byte, val interface{}, elem reflect.Type, i int) {
+	defer func() {
+		_ = recover()
+	}()
+	field := elem.FieldByIndex([]int{i})
+	keys, ok := field.Tag.Lookup("djson")
+	if !ok {
+		return
+	}
+	for _, key := range strings.Split(keys, ",") {
+		result := gjson.GetBytes(data, strings.TrimSpace(key))
+		if !result.Exists() {
 			continue
 		}
-		for _, key := range strings.Split(keys, ",") {
-			result := gjson.GetBytes(data, strings.TrimSpace(key))
-			if !result.Exists() {
-				continue
+		value := reflect.ValueOf(result.Value())
+		fieldValue := reflect.ValueOf(val).Elem().FieldByIndex(field.Index)
+		if fieldValue.Kind() == reflect.Ptr {
+			if fieldValue.IsNil() {
+				fieldValue.Set(reflect.New(fieldValue.Type().Elem()))
 			}
-			value := reflect.ValueOf(result.Value())
-			fieldValue := reflect.ValueOf(val).Elem().FieldByIndex(field.Index)
-			if fieldValue.Kind() == reflect.Ptr {
-				if fieldValue.IsNil() {
-					fieldValue.Set(reflect.New(fieldValue.Type().Elem()))
-				}
-				fieldValue.Elem().Set(convert(value, fieldValue.Elem()))
-			} else {
-				fieldValue.Set(convert(value, fieldValue))
-			}
+			fieldValue.Elem().Set(convert(value, fieldValue.Elem()))
+		} else {
+			fieldValue.Set(convert(value, fieldValue))
 		}
 	}
 }
