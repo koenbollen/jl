@@ -21,14 +21,21 @@ func (b *zap) Detect(json map[string]interface{}) bool {
 	}
 
 	for _, value := range json {
-		if str, ok := value.(string); ok {
+		var str string
+		if str, ok = value.(string); ok {
 			if strings.HasPrefix(str, "go.uber.org/zap.Stack") {
 				return true
 			}
 		}
 	}
 
-	return false
+	_, ok = json["stacktrace"].(string)
+	if !ok {
+		return true
+	}
+
+	_, ok = json["stack"].(string)
+	return !ok
 }
 
 func (b *zap) Format(json map[string]interface{}) string {
@@ -41,6 +48,15 @@ func (b *zap) Format(json map[string]interface{}) string {
 				stack = str
 				break
 			}
+		}
+	}
+
+	if stack == "" {
+		if s, ok := json["stack"].(string); ok {
+			stack = s
+		}
+		if s, ok := json["stacktrace"].(string); ok {
+			stack = s
 		}
 	}
 

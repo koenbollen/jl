@@ -4,4 +4,9 @@ if [ "$1" = "--error" ]; then
   printf '{"level":"error","msg":"panic!","error":"timeout","stack":"go.uber.org/zap.Stack\\n\\tgo.uber.org/zap/field.go:191\\nmain.somefunction\\n\\tmain.go:11\\nmain.main\\n\\tmain.go:15"}'
   exit
 fi
+
+if [ "$1" = "--complex-error" ]; then
+  printf '{"severity":"ERROR","timestamp":"2017-11-22T15:32:28.907Z","caller":"kafka/consumer.go:63","message":"Kafka consumer received error.","app":"stream-processor-ses-mailer","tier":"mailer","production":false,"version":"5bb5b52","environment":"development","error":"kafka server: The provided member is not known in the current generation.","stacktrace":"github.com/koenbollen/stream-processor-example/vendor/github.com/blendle/go-streamprocessor/streamclient/kafka.(*Client).NewConsumer.func2\\n\\t/home/jenkins/go/src/github.com/koenbollen/stream-processor-example/vendor/github.com/blendle/go-streamprocessor/streamclient/kafka/consumer.go:63"}'
+  exit
+fi
 echo '{"level":"info","message":"logger construction succeeded","foo":"bar"}'

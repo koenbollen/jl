@@ -108,7 +108,9 @@ func (f *Formatter) enhance(entry *Entry) {
 		if color, ok := severityColors[entry.Severity]; ok {
 			entry.Severity = color(entry.Severity)
 		}
-		entry.Severity = strings.Repeat(" ", padding) + entry.Severity
+		if padding > 0 {
+			entry.Severity = strings.Repeat(" ", padding) + entry.Severity
+		}
 	}
 
 	entry.Message = messageColor(entry.Message)
