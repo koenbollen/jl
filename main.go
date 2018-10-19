@@ -15,7 +15,7 @@ import (
 )
 
 func main() {
-	files, color, showPrefix, showSuffix, showFields := cli()
+	files, color, showPrefix, showSuffix, showFields, includeFields := cli()
 	formatter, err := structure.NewFormatter(os.Stdout, "")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "invalid format: %v\n", err)
@@ -26,6 +26,7 @@ func main() {
 	formatter.ShowPrefix = showPrefix
 	formatter.ShowSuffix = showSuffix
 	formatter.ShowFields = showFields
+	formatter.IncludeFields = includeFields
 
 	r, err := openFiles(files)
 	if err != nil {

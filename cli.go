@@ -23,6 +23,9 @@ Output Options:
   --skip-prefix     Skip printing truncated bytes before the JSON
   --skip-suffix     Skip printing truncated bytes after the JSON
   --skip-fields     Don't output misc json keys as fields
+  --include-fields <fields>, -f <fields>
+										Always include these json keys as fields (comma
+										seperated list)
 
 You can add any option to the JL_OPTS environment variable, ex:
   export JL_OPTS="--no-color"
@@ -31,7 +34,7 @@ You can add any option to the JL_OPTS environment variable, ex:
 
 var version = "<unknown_version>"
 
-func cli() (files []string, color, showPrefix, showSuffix, showFields bool) {
+func cli() (files []string, color, showPrefix, showSuffix, showFields bool, includeFields string) {
 	argv := append(os.Args[1:], strings.Split(os.Getenv("JL_OPTS"), " ")...)
 	arguments, err := docopt.Parse(usage, argv, true, "jl "+version, false)
 	if err != nil {
@@ -42,6 +45,7 @@ func cli() (files []string, color, showPrefix, showSuffix, showFields bool) {
 	showPrefix = !arguments["--skip-prefix"].(bool)
 	showSuffix = !arguments["--skip-suffix"].(bool)
 	showFields = !arguments["--skip-fields"].(bool)
+	includeFields, _ = arguments["--include-fields"].(string)
 	files = arguments["FILE"].([]string)
 	return
 }

@@ -6,11 +6,11 @@
 
     $ myprogram
     {"message": "Hello, world!!", "severity": "info"}
-    {"message": "skipping file", "severity": "warn"}
+    {"message": "skipping file", "severity": "warn", "file": "empty.txt"}
 
     $ myprogram | jl
        INFO: Hello, world!!
-    WARNING: skipping file
+    WARNING: skipping file [file=empty.txt]
 
 ### Installation
 

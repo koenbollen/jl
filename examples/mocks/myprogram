@@ -11,5 +11,5 @@ elif [ "$1" = "--complex" ]; then
   echo '{"message": "failed to handle request", "severity": "error", "timestamp": "2017-09-28T06:43:14Z", "error": "no such template"}'
 else
   echo '{"message": "Hello, world!!", "severity": "info"}'
-  echo '{"message": "skipping file", "severity": "warn"}'
+  echo '{"message": "skipping file", "severity": "warn", "file": "empty.txt"}'
 fi

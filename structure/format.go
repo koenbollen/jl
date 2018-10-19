@@ -37,10 +37,11 @@ type Formatter struct {
 	output   io.Writer
 	template *template.Template
 
-	Colorize   bool
-	ShowFields bool
-	ShowPrefix bool
-	ShowSuffix bool
+	Colorize      bool
+	ShowFields    bool
+	ShowPrefix    bool
+	ShowSuffix    bool
+	IncludeFields string
 }
 
 // NewFormatter compiles the given fmt as a go template and returns a Formatter
@@ -54,12 +55,13 @@ func NewFormatter(w io.Writer, fmt string) (*Formatter, error) {
 	}
 
 	return &Formatter{
-		output:     w,
-		template:   tmpl,
-		Colorize:   false,
-		ShowFields: true,
-		ShowPrefix: true,
-		ShowSuffix: true,
+		output:        w,
+		template:      tmpl,
+		Colorize:      false,
+		ShowFields:    true,
+		ShowPrefix:    true,
+		ShowSuffix:    true,
+		IncludeFields: "",
 	}, nil
 }
 
@@ -148,7 +150,7 @@ func (f *Formatter) outputFields(entry *Entry, raw json.RawMessage) {
 			if _, ok := value.([]interface{}); ok {
 				continue
 			}
-			if !shouldSkipField(key, value) {
+			if !f.shouldSkipField(key, value) {
 				output = append(output, fmt.Sprintf("%s=%v", key, value))
 			}
 		}
@@ -159,7 +161,10 @@ func (f *Formatter) outputFields(entry *Entry, raw json.RawMessage) {
 	}
 }
 
-func shouldSkipField(field string, value interface{}) bool {
+func (f *Formatter) shouldSkipField(field string, value interface{}) bool {
+	if strings.Contains(f.IncludeFields, field) {
+		return false
+	}
 	if len(fmt.Sprintf("%v", value)) >= 24 {
 		return true
 	}
