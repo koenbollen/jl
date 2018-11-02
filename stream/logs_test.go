@@ -21,13 +21,13 @@ fifth is {broken
 {"then": "we have"} trailing text
 json in {"the": "middle"} of the line`
 	expected := []*stream.Line{
-		{[]byte("first line is normal"), nil, nil, nil},
-		{[]byte(`{"second": "line is json"}`), json.RawMessage(`{"second": "line is json"}`), nil, nil},
-		{[]byte(`{"third": "as well"}`), json.RawMessage(`{"third": "as well"}`), nil, nil},
-		{[]byte(`forth line: {"is": "mixed"}`), json.RawMessage(`{"is": "mixed"}`), []byte(`forth line: `), nil},
-		{[]byte(`fifth is {broken`), nil, nil, nil},
-		{[]byte(`{"then": "we have"} trailing text`), json.RawMessage(`{"then": "we have"}`), nil, []byte(` trailing text`)},
-		{[]byte(`json in {"the": "middle"} of the line`), json.RawMessage(`{"the": "middle"}`), []byte(`json in `), []byte(` of the line`)},
+		{Raw: []byte("first line is normal"), JSON: nil, Prefix: nil, Suffix: nil},
+		{Raw: []byte(`{"second": "line is json"}`), JSON: json.RawMessage(`{"second": "line is json"}`), Prefix: nil, Suffix: nil},
+		{Raw: []byte(`{"third": "as well"}`), JSON: json.RawMessage(`{"third": "as well"}`), Prefix: nil, Suffix: nil},
+		{Raw: []byte(`forth line: {"is": "mixed"}`), JSON: json.RawMessage(`{"is": "mixed"}`), Prefix: []byte(`forth line: `), Suffix: nil},
+		{Raw: []byte(`fifth is {broken`), JSON: nil, Prefix: nil, Suffix: nil},
+		{Raw: []byte(`{"then": "we have"} trailing text`), JSON: json.RawMessage(`{"then": "we have"}`), Prefix: nil, Suffix: []byte(` trailing text`)},
+		{Raw: []byte(`json in {"the": "middle"} of the line`), JSON: json.RawMessage(`{"the": "middle"}`), Prefix: []byte(`json in `), Suffix: []byte(` of the line`)},
 	}
 	s := stream.New(strings.NewReader(in))
 	for i, line := range expected {
