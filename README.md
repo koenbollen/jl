@@ -2,7 +2,7 @@
 
 `jl` is a development tool for working with structured JSON logging.
 
-### Example usage:
+### Examples
 
     $ myprogram
     {"message": "Hello, world!!", "severity": "info"}
@@ -18,16 +18,36 @@
     $ echo '{"msg": "It works!"}' | jl
     It works!
 
-### Project Status
+### Usage
 
-The `jl` project is in early development
+```
+Usage:
+  jl [options] [FILE...]
 
-**Next steps:**
+Options:
+  -h, --help    Show this screen.
+  --version     Show version.
 
-- [X] CI
-- [X] CLI options/toggles/flags, also support environment defaults
-- [X] Support stacktraces
-- [X] Colorize output, like [bunyan](https://github.com/trentm/node-bunyan) does
-- [ ] More examples/tests to make sure to be compatible with existing tooling
-- [ ] Enhance this README and the --help
-- [ ] Ship it! :shipit:
+Output Options:
+  --color           Force colorized output
+  --no-color        Don't colorize output
+  --skip-prefix     Skip printing truncated bytes before the JSON
+  --skip-suffix     Skip printing truncated bytes after the JSON
+
+Formatting Options:
+  --skip-fields     Don't output misc json keys as fields
+  --include-fields <fields>, -f <fields>
+                    Always include these json keys as fields (comma
+                    seperated list)
+
+You can add any option to the JL_OPTS environment variable, ex:
+  export JL_OPTS="--no-color"
+```
+
+### Compatiblity
+
+`jl` tries to dynamically parse the lines to support as many well
+known formats as possible.
+
+Is `jl` not compatible with your structured logging? Please let me
+know by [creating an issue](https://github.com/koenbollen/jl/issues/new).
