@@ -44,7 +44,7 @@ You can add any option to the JL_OPTS environment variable, ex:
   export JL_OPTS="--no-color"
 ```
 
-### Compatiblity
+### Compatibility
 
 `jl` tries to dynamically parse the lines to support as many well
 known formats as possible.
