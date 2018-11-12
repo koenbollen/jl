@@ -36,9 +36,7 @@ Output Options:
 
 Formatting Options:
   --skip-fields     Don't output misc json keys as fields
-  --include-fields <fields>, -f <fields>
-                    Always include these json keys as fields (comma
-                    seperated list)
+  --include-fields  <fields>, -f <fields> Always include these json keys as fields (comma seperated list)
 
 You can add any option to the JL_OPTS environment variable, ex:
   export JL_OPTS="--no-color"
