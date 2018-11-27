@@ -1,5 +1,7 @@
 # jl — JSON Logs
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/koenbollen/jl)](https://goreportcard.com/report/github.com/koenbollen/jl)
+
 `jl` is a development tool for working with structured JSON logging.
 
 ### Examples
