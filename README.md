@@ -1,10 +1,16 @@
-# jl — JSON Logs
+# ![jl — JSON Logs](.github/logo.png)
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/koenbollen/jl)](https://goreportcard.com/report/github.com/koenbollen/jl)
 
-`jl` is a development tool for working with structured JSON logging.
+**`jl` is a development tool for working with structured JSON logging.**
 
-### Examples
+Modern applications quite often use structured logging instead of simple log
+messages. This is preferable for computer systems but not for humans. `jl` will
+help development by translating structured message into old-fashioned log lines.
+
+## Examples
+
+A code snippets says more than a thousand words:
 
     $ myprogram
     {"message": "Hello, world!!", "severity": "info"}
@@ -14,13 +20,15 @@
        INFO: Hello, world!!
     WARNING: skipping file [file=empty.txt]
 
-### Installation
+(more [examples](https://github.com/koenbollen/jl/tree/master/examples))
+
+## Installation
 
     $ go get -u github.com/koenbollen/jl
     $ echo '{"msg": "It works!"}' | jl
     It works!
 
-### Usage
+## Usage
 
 ```
 Usage:
@@ -44,7 +52,7 @@ You can add any option to the JL_OPTS environment variable, ex:
   export JL_OPTS="--no-color"
 ```
 
-### Compatibility
+## Compatibility
 
 `jl` tries to dynamically parse the lines to support as many well
 known formats as possible.
