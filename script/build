@@ -1,0 +1,7 @@
+#!/bin/sh
+set -e
+cd "$(dirname "$0")/.."
+
+go get -u github.com/mitchellh/gox
+
+gox -os="linux darwin" -arch="386 amd64" -osarch="linux/arm" -ldflags="-s -extldflags -static" .
