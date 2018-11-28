@@ -45,7 +45,7 @@ Example:
 
 `
 
-var version = "<unknown_version>"
+var version = "v1.1.0"
 
 func cli() (files []string, color, showPrefix, showSuffix, showFields bool, includeFields string) {
 	argv := append(os.Args[1:], strings.Split(os.Getenv("JL_OPTS"), " ")...)
