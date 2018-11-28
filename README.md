@@ -21,7 +21,7 @@ A code snippets says more than a thousand words:
        INFO: Hello, world!!
     WARNING: skipping file [file=empty.txt]
 
-(more [examples](https://github.com/koenbollen/jl/tree/master/examples))
+(more [examples](https://github.com/koenbollen/jl/tree/master/examples) here)
 
 ## Installation
 
