@@ -21,13 +21,19 @@ A code snippets says more than a thousand words:
        INFO: Hello, world!!
     WARNING: skipping file [file=empty.txt]
 
-(more [examples](https://github.com/koenbollen/jl/tree/master/examples) here)
+([more examples](https://github.com/koenbollen/jl/tree/master/examples))
 
 ## Installation
 
-    $ go get -u github.com/koenbollen/jl
-    $ echo '{"msg": "It works!"}' | jl
-    It works!
+```bash
+$ brew install koenbollen/public/jl
+$ echo '{"msg": "It works!"}' | jl
+It works!
+```
+
+Alternatively you can fetch a binary from the
+[latest release](https://github.com/koenbollen/jl/releases) or install the
+latest development version from source: `go get -u github.com/koenbollen/jl`
 
 ## Usage
 
