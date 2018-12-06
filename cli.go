@@ -32,7 +32,7 @@ Output Options:
 
 Formatting Options:
   --skip-fields     Don't output misc json keys as fields
-  --include-fields  <fields>, -f <fields>
+  --include-fields <fields>, -f <fields>
                     Always include these json keys as fields (comma
                     seperated list)
 
@@ -42,7 +42,6 @@ You can add any option to the JL_OPTS environment variable, ex:
 Example:
   $ echo '{"level": "info", "msg": "Hello!", "size": 42}' | jl
   INFO: Hello! [size=42]
-
 `
 
 var version = "v1.1.0"
