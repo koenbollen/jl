@@ -44,7 +44,7 @@ Example:
   INFO: Hello! [size=42]
 `
 
-var version = "v1.1.0"
+var version = "v1.1.1"
 
 func cli() (files []string, color, showPrefix, showSuffix, showFields bool, includeFields string) {
 	argv := append(os.Args[1:], strings.Split(os.Getenv("JL_OPTS"), " ")...)
