@@ -4,7 +4,9 @@ cd "$(dirname "$0")/.."
 
 go mod verify
 go test ./...
-golangci-lint run ./...
+
+GO111MODULE=on go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.17.1
+"$(go env GOPATH)/bin/golangci-lint" run ./...
 
 go install
 (
