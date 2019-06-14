@@ -51,10 +51,14 @@ func (l *stream) run() {
 		json := l.parse(raw)
 		prefix, suffix := split(raw, json)
 		line := &Line{
-			Raw:    raw,
-			JSON:   json,
+			Raw:    make([]byte, len(raw)),
 			Prefix: prefix,
 			Suffix: suffix,
+		}
+		copy(line.Raw, raw)
+		if json != nil {
+			line.JSON = make([]byte, len(json))
+			copy(line.JSON, json)
 		}
 		select {
 		case <-l.stop:
