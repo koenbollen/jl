@@ -2,16 +2,15 @@
 set -e
 cd "$(dirname "$0")/.."
 
+go mod verify
 go test ./...
-
-gometalinter --vendor -D errcheck -D gosec ./...
+golangci-lint run ./...
 
 go install
 (
   cd examples
   export JL_OPTS="--no-color"
-  PATH="${PATH}:$(pwd)/mocks"
+  PATH="$(go env GOPATH)/bin:${PATH}:$(pwd)/mocks"
   export PATH
-  export GOPATH="${TMPDIR:-/tmp}/go"
   cram -E --verbose --indent=4 ../README.md ./*.md
 )
