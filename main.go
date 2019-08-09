@@ -5,7 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"math"
 	"os"
+	"time"
 
 	"github.com/koenbollen/jl/djson"
 	"github.com/koenbollen/jl/stream"
@@ -48,6 +50,12 @@ func main() {
 			writeBytes(line.Raw)
 			writeBytes(structure.NewLine)
 			continue
+		}
+
+		if (entry.Timestamp == nil || entry.Timestamp.IsZero()) && entry.FloatTimestamp > 0 {
+			sec, dec := math.Modf(entry.FloatTimestamp)
+			t := time.Unix(int64(sec), int64(dec*(1e9)))
+			entry.Timestamp = &t
 		}
 
 		// Passing entry to formatter to output:

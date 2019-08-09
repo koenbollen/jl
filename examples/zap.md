@@ -1,9 +1,9 @@
 
     $ some_zap_program
-    {"level":"info","message":"logger construction succeeded","foo":"bar"}
+    {"level":"info","message":"logger construction succeeded","foo":"bar","ts":1565361391.4279764}
 
     $ some_zap_program | jl
-       INFO: logger construction succeeded [foo=bar]
+    [2019-08-09 14:36:31]    INFO: logger construction succeeded [foo=bar]
 
     $ some_zap_program --error
     {"level":"error","msg":"panic!","error":"timeout","stack":"go.uber.org/zap.Stack\n\tgo.uber.org/zap/field.go:191\nmain.somefunction\n\tmain.go:11\nmain.main\n\tmain.go:15"} (no-eol)
