@@ -25,7 +25,7 @@ var severityMapping = map[string]string{
 }
 
 var fieldsToSkip = []string{
-	"@timestamp", "hostname", "level", "message", "msg", "name", "pid", "severity", "text", "time", "timestamp", "v",
+	"@timestamp", "hostname", "level", "message", "msg", "name", "pid", "severity", "text", "time", "timestamp", "ts", "v",
 }
 
 // NewLine contains ['\n']
