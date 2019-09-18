@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"sort"
+	"strconv"
 	"strings"
 	"text/template"
 
@@ -151,7 +152,12 @@ func (f *Formatter) outputFields(entry *Entry, raw json.RawMessage) {
 				continue
 			}
 			if !f.shouldSkipField(key, value) {
-				output = append(output, fmt.Sprintf("%s=%v", key, value))
+				switch v := value.(type) {
+				case float64:
+					output = append(output, key+"="+strconv.FormatFloat(v, 'f', -1, 64))
+				default:
+					output = append(output, fmt.Sprintf("%s=%v", key, value))
+				}
 			}
 		}
 		if len(output) > 0 {
