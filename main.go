@@ -54,7 +54,7 @@ func main() {
 
 		if (entry.Timestamp == nil || entry.Timestamp.IsZero()) && entry.FloatTimestamp > 0 {
 			sec, dec := math.Modf(entry.FloatTimestamp)
-			t := time.Unix(int64(sec), int64(dec*(1e9)))
+			t := time.Unix(int64(sec), int64(dec*(1e9))).UTC()
 			entry.Timestamp = &t
 		}
 
