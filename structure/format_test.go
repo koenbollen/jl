@@ -14,7 +14,9 @@ const example = `{
   "severity": "30",
   "timestamp": "2015-02-11T13:37:00Z",
   "lang": "fr",
-  "labels": {"git_rev": "0992944"}
+  "labels": {"git_rev": "0992944"},
+  "long_number": 22501438,
+  "float_number": 2250.1438
 }`
 
 func TestHappypath(t *testing.T) {
@@ -33,8 +35,9 @@ func TestHappypath(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to format entry: %v", err)
 	}
-	if buf.String() != "[2015-02-11 13:37:00]    INFO: Hello, world [git_rev=0992944 lang=fr]\n" {
-		t.Errorf("invalid output: %q", buf.String())
+	expect1 := "[2015-02-11 13:37:00]    INFO: Hello, world [float_number=2250.1438 git_rev=0992944 lang=fr long_number=22501438]\n"
+	if buf.String() != expect1 {
+		t.Errorf("\n\tnot match: %q\n\t   expect: %q\n", buf.String(), expect1)
 	}
 
 	buf.Reset()
@@ -42,7 +45,8 @@ func TestHappypath(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to format entry: %v", err)
 	}
-	if buf.String() != "prefix: [2015-02-11 13:37:00]    INFO: Hello, world [git_rev=0992944 lang=fr] suffix!\n" {
-		t.Errorf("invalid output: %q", buf.String())
+	expect2 := "prefix: [2015-02-11 13:37:00]    INFO: Hello, world [float_number=2250.1438 git_rev=0992944 lang=fr long_number=22501438] suffix!\n"
+	if buf.String() != expect2 {
+		t.Errorf("\n\tnot match: %q\n\t   expect: %q\n", buf.String(), expect2)
 	}
 }
