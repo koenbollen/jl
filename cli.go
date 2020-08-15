@@ -30,14 +30,13 @@ Output Options:
   --no-color        Don't colorize output
   --skip-prefix     Skip printing truncated bytes before the JSON
   --skip-suffix     Skip printing truncated bytes after the JSON
-  
-  --timestamp		format of timestamps, supported are seconds(default) and milliseconds
 
 Formatting Options:
   --skip-fields     Don't output misc json keys as fields
   --include-fields <fields>, -f <fields>
                     Always include these json keys as fields (comma
-                    separated list)
+					separated list)
+  --timestamp		<timestamp format> set up the format of timestamps, supported are seconds(default) and milliseconds
 
 You can add any option to the JL_OPTS environment variable, ex:
   export JL_OPTS="--no-color"
