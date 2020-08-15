@@ -17,7 +17,7 @@ import (
 )
 
 func main() {
-	files, color, showPrefix, showSuffix, showFields, includeFields := cli()
+	files, color, showPrefix, showSuffix, showFields, includeFields, timestampFormat := cli()
 	formatter, err := structure.NewFormatter(os.Stdout, "")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "invalid format: %v\n", err)
@@ -54,6 +54,9 @@ func main() {
 
 		if (entry.Timestamp == nil || entry.Timestamp.IsZero()) && entry.FloatTimestamp > 0 {
 			sec, dec := math.Modf(entry.FloatTimestamp)
+			if timestampFormat == time.Millisecond {
+				sec = sec / 1000
+			}
 			t := time.Unix(int64(sec), int64(dec*(1e9))).UTC()
 			entry.Timestamp = &t
 		}

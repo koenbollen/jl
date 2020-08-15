@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"strings"
+	"time"
 
 	"github.com/docopt/docopt-go"
 	"github.com/mattn/go-isatty"
@@ -29,6 +30,8 @@ Output Options:
   --no-color        Don't colorize output
   --skip-prefix     Skip printing truncated bytes before the JSON
   --skip-suffix     Skip printing truncated bytes after the JSON
+  
+  --timestamp		format of timestamps, supported are seconds(default) and milliseconds
 
 Formatting Options:
   --skip-fields     Don't output misc json keys as fields
@@ -46,7 +49,7 @@ Example:
 
 var version = "v1.2.0"
 
-func cli() (files []string, color, showPrefix, showSuffix, showFields bool, includeFields string) {
+func cli() (files []string, color, showPrefix, showSuffix, showFields bool, includeFields string, timestampFormat time.Duration) {
 	argv := append(os.Args[1:], strings.Split(os.Getenv("JL_OPTS"), " ")...)
 	arguments, err := docopt.Parse(usage, argv, true, "jl "+version, false)
 	if err != nil {
@@ -58,6 +61,20 @@ func cli() (files []string, color, showPrefix, showSuffix, showFields bool, incl
 	showSuffix = !arguments["--skip-suffix"].(bool)
 	showFields = !arguments["--skip-fields"].(bool)
 	includeFields, _ = arguments["--include-fields"].(string)
+
+	timestampFormatAsString, _ := arguments["--timestamp"].(string)
+	timestampFormat = determineTimestampsFormat(timestampFormatAsString)
+
 	files = arguments["FILE"].([]string)
 	return
+}
+
+func determineTimestampsFormat(timestampFormat string) (timestampDurationFormat time.Duration) {
+	switch timestampFormat {
+	case "milliseconds":
+		return time.Millisecond
+	default:
+		return time.Second
+	}
+
 }
