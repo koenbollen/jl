@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"text/template"
+	"time"
 
 	"github.com/fatih/color"
 )
@@ -100,6 +101,12 @@ func (f *Formatter) Format(entry *Entry, raw json.RawMessage, prefix, suffix []b
 func (f *Formatter) enhance(entry *Entry) {
 	if entry.Timestamp != nil && entry.Timestamp.IsZero() {
 		entry.Timestamp = nil
+	}
+
+	if entry.Timestamp != nil && entry.Timestamp.Year() > 3000 { // timestamp was probably in milliseconds
+		t := *entry.Timestamp
+		t = time.Unix(t.Unix()/int64(time.Second/time.Millisecond), 0).UTC()
+		entry.Timestamp = &t
 	}
 
 	entry.Severity = strings.ToUpper(entry.Severity)
