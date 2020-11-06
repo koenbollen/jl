@@ -7,8 +7,8 @@ type Entry struct {
 	Timestamp      *time.Time `djson:"timestamp,@timestamp,time,date,ts"`
 	RawTimestamp   string     `djson:"timestamp,@timestamp,time,date,ts"`
 	FloatTimestamp float64    `djson:"timestamp,@timestamp,time,date,ts"`
-	Severity       string     `djson:"severity,level"`
+	Severity       string     `djson:"severity,level,log.level"`
 	Message        string     `djson:"message,msg,text"`
 
-	Name string `djson:"app,name"`
+	Name string `djson:"app,name,service.name"`
 }

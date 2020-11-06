@@ -147,18 +147,20 @@ func (f *Formatter) outputFields(entry *Entry, raw json.RawMessage) {
 		for k, v := range labels.(map[string]interface{}) {
 			fields[k] = v
 		}
+		delete(fields, "labels")
 	}
 
 	output := make([]string, 0)
 	if err == nil {
-		for key, value := range fields {
+		path := ""
+		for key, value := range walkFields(fields, "") {
 			if _, ok := value.(map[string]interface{}); ok {
 				continue
 			}
 			if _, ok := value.([]interface{}); ok {
 				continue
 			}
-			if !f.shouldSkipField(key, value) {
+			if !f.shouldSkipField(key, path+"."+key, value) {
 				switch v := value.(type) {
 				case float64:
 					output = append(output, key+"="+strconv.FormatFloat(v, 'f', -1, 64))
@@ -174,13 +176,33 @@ func (f *Formatter) outputFields(entry *Entry, raw json.RawMessage) {
 	}
 }
 
-func (f *Formatter) shouldSkipField(field string, value interface{}) bool {
-	if strings.Contains(f.IncludeFields, field) {
+func (f *Formatter) shouldSkipField(field, path string, value interface{}) bool {
+	if strings.Contains(f.IncludeFields, field) || strings.Contains(f.IncludeFields, path) {
 		return false
 	}
-	if len(fmt.Sprintf("%v", value)) >= 24 {
+	if strings.Count(path, ".") > 1 { // Only include nested fields when the are in the IncludeFields
+		return true
+	}
+	if len(path+fmt.Sprintf("%v", value)) >= 30 {
 		return true
 	}
 	ix := sort.SearchStrings(fieldsToSkip, field)
 	return ix < len(fieldsToSkip) && fieldsToSkip[ix] == field
+}
+
+func walkFields(fields map[string]interface{}, path string) map[string]interface{} {
+	result := make(map[string]interface{})
+	for key, value := range fields {
+		if path != "" {
+			key = path + "." + key
+		}
+		if nested, ok := value.(map[string]interface{}); ok {
+			for k, v := range walkFields(nested, key) {
+				result[k] = v
+			}
+		} else {
+			result[key] = value
+		}
+	}
+	return result
 }

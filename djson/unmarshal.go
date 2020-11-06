@@ -32,7 +32,10 @@ func process(data []byte, val interface{}, elem reflect.Type, i int) {
 	for _, key := range strings.Split(keys, ",") {
 		result := gjson.GetBytes(data, strings.TrimSpace(key))
 		if !result.Exists() {
-			continue
+			result = gjson.GetBytes(data, strings.ReplaceAll(strings.TrimSpace(key), ".", "\\."))
+			if !result.Exists() {
+				continue
+			}
 		}
 		value := reflect.ValueOf(result.Value())
 		fieldValue := reflect.ValueOf(val).Elem().FieldByIndex(field.Index)
