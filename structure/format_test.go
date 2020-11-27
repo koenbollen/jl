@@ -50,3 +50,32 @@ func TestHappypath(t *testing.T) {
 		t.Errorf("\n\tnot match: %q\n\t   expect: %q\n", buf.String(), expect2)
 	}
 }
+
+func TestNestedFieldPaths(t *testing.T) {
+	t.Parallel()
+
+	logline := []byte(`{"message": "Hi!", "severity": "info", "meta": {"count": 42}, "flat.root": "yes"}`)
+
+	buf := &bytes.Buffer{}
+	formatter, err := structure.NewFormatter(buf, "")
+	if err != nil {
+		t.Fatalf("failed to create new formatter: %v", err)
+	}
+
+	var entry structure.Entry
+	err = json.Unmarshal(logline, &entry)
+	if err != nil {
+		t.Fatalf("failed to unmarshal logline: %v", err)
+	}
+
+	formatter.IncludeFields = "flat.root,meta.count"
+
+	err = formatter.Format(&entry, logline, nil, nil)
+	if err != nil {
+		t.Fatalf("failed to format entry: %v", err)
+	}
+	expect := "   INFO: Hi! [flat.root=yes meta.count=42]\n"
+	if buf.String() != expect {
+		t.Errorf("\n\tnot match: %q\n\t   expect: %q\n", buf.String(), expect)
+	}
+}

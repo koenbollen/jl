@@ -123,3 +123,20 @@ func TestWeirdTimestamp(t *testing.T) {
 		t.Error("failed to set .Timestamp from RFC3339Nano")
 	}
 }
+
+func TestDoubleNestedType(t *testing.T) {
+	t.Parallel()
+	val := struct {
+		Level string `djson:"log.level"`
+	}{}
+
+	djson.Unmarshal([]byte(`{"log.level": "info"}`), &val)
+	if val.Level != "info" {
+		t.Error("failed to set .Level from static flat path")
+	}
+
+	djson.Unmarshal([]byte(`{"log": {"level": "warning"}}`), &val)
+	if val.Level != "warning" {
+		t.Error("failed to set .Level from nested path")
+	}
+}
