@@ -7,6 +7,6 @@ require (
 	github.com/fatih/color v1.6.0
 	github.com/mattn/go-colorable v0.1.2 // indirect
 	github.com/mattn/go-isatty v0.0.8
-	github.com/tidwall/gjson v1.6.5
+	github.com/tidwall/gjson v1.9.3
 	golang.org/x/sys v0.0.0-20190919044723-0c1ff786ef13 // indirect
 )
