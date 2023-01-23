@@ -1,0 +1,27 @@
+name: cram
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+jobs:
+  cram:
+    name: examples
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - uses: actions/setup-go@v3
+        with:
+          go-version: 1.19.3
+      - uses: actions/checkout@v3
+      - run: pip install cram
+      - run: go install
+      - name: test examples
+        run: |
+          cd examples
+          export JL_OPTS="--no-color"
+          PATH="$(go env GOPATH)/bin:${PATH}:$(pwd)/mocks"
+          export PATH
+          cram -E --verbose --indent=4 ../README.md ./*.md

@@ -25,15 +25,28 @@ A code snippets says more than a thousand words:
 
 ## Installation
 
+#### macOS:
+
 ```bash
 $ brew install koenbollen/public/jl
 $ echo '{"msg": "It works!"}' | jl
 It works!
 ```
 
+#### Linux:
+
+```bash
+$ curl -LO https://github.com/koenbollen/jl/releases/download/v1.4.0/jl_linux_amd64
+$ sudo install jl_linux_amd64 /usr/bin/jl && rm jl_linux_amd64
+$ echo '{"msg": "It works!"}' | jl
+It works!
+```
+
+#### Others:
+
 Alternatively you can fetch a binary from the
 [latest release](https://github.com/koenbollen/jl/releases) or install the
-latest development version from source: `go get -u github.com/koenbollen/jl`
+latest development version from source: `go install github.com/koenbollen/jl@latest` (requires Go 1.17+).
 
 ## Usage
 
