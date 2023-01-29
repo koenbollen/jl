@@ -48,7 +48,7 @@ func main() {
 		}
 
 		// unable to parse entry, outputting raw line:
-		if err != nil || entry.Message == "" {
+		if line.JSON == nil || err != nil {
 			writeBytes(line.Raw)
 			writeBytes(structure.NewLine)
 			continue
