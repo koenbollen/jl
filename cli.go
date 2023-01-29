@@ -35,6 +35,8 @@ Formatting Options:
   --include-fields <fields>, -f <fields>
                     Always include these json keys as fields (comma
                     separated list)
+  --exclude-fields <fields> Always exclude these json keys (comma
+                    separated list)
 
 You can add any option to the JL_OPTS environment variable, ex:
   export JL_OPTS="--no-color"
@@ -46,7 +48,7 @@ Example:
 
 var version = "v1.4.0"
 
-func cli() (files []string, color, showPrefix, showSuffix, showFields bool, includeFields string) {
+func cli() (files []string, color, showPrefix, showSuffix, showFields bool, includeFields string, excludeFields string) {
 	argv := append(os.Args[1:], strings.Split(os.Getenv("JL_OPTS"), " ")...)
 	arguments, err := docopt.Parse(usage, argv, true, "jl "+version, false)
 	if err != nil {
@@ -58,6 +60,7 @@ func cli() (files []string, color, showPrefix, showSuffix, showFields bool, incl
 	showSuffix = !arguments["--skip-suffix"].(bool)
 	showFields = !arguments["--skip-fields"].(bool)
 	includeFields, _ = arguments["--include-fields"].(string)
+	excludeFields, _ = arguments["--exclude-fields"].(string)
 	files = arguments["FILE"].([]string)
 	return
 }

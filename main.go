@@ -7,6 +7,7 @@ import (
 	"io"
 	"math"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/koenbollen/jl/djson"
@@ -17,7 +18,7 @@ import (
 )
 
 func main() {
-	files, color, showPrefix, showSuffix, showFields, includeFields := cli()
+	files, color, showPrefix, showSuffix, showFields, includeFields, excludeFields := cli()
 	formatter, err := structure.NewFormatter(os.Stdout, "")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "invalid format: %v\n", err)
@@ -29,6 +30,7 @@ func main() {
 	formatter.ShowSuffix = showSuffix
 	formatter.ShowFields = showFields
 	formatter.IncludeFields = includeFields
+	formatter.ExcludeFields = append(formatter.ExcludeFields, strings.Split(excludeFields, ",")...)
 
 	r, err := openFiles(files)
 	if err != nil {
