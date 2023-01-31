@@ -29,9 +29,16 @@ Show the tools usage and help:
     
     Formatting Options:
       --skip-fields     Don't output misc json keys as fields
+      --max-field-length <int>
+                        Any field, exceeding the given length (including
+                        field name) will be ommitted from output. Use 0
+                        to remove the length limit [default: 30]
       --include-fields <fields>, -f <fields>
-                        Always include these json keys as fields (comma
-                        separated list)
+                        Always include these json keys as fields, no matter
+                        the length (comma separated list)
+      --exclude-fields <fields>
+                        Always exclude these json keys (comma separated
+                        list)
     
     You can add any option to the JL_OPTS environment variable, ex:
       export JL_OPTS="--no-color"
@@ -58,16 +65,36 @@ Show the tools usage and help:
 
 ## Fields
 
-Most JSON logging will include more fields then just the message. These fields are also printed through `jl` when the length of the value is not to long. You can influence this using the --skip-fields and --include-fields flags:
+Most JSON logging will include more fields then just the message. These fields are also printed through `jl` when the length of the value does not exceed a defined limit. Several flags are available to control the fields treatment, see the usage examples below.
+
+By default `jl` will interpret misc json keys as fields and print them out:
 
     $ echo '{"level": "warning", "msg": "Login failed", "user_id": "42"}' | jl
     WARNING: Login failed [user_id=42]
 
+It is possible to disable the fields processing all together with the --skip-fields flag:
+
     $ echo '{"level": "warning", "msg": "Login failed", "user_id": "42"}' | jl --skip-fields
     WARNING: Login failed
 
-    $ echo '{"msg": "test", "val": "Lorem ipsum dolor sit amet."}' | jl
-    test
+If the length of the field (key + value) exceeds the default limit of 30 characters, it will not be printed:
+
+    $ echo '{"msg": "test", "ver": "1.0.0", "val": "Lorem ipsum dolor sit amet."}' | jl
+    test [ver=1.0.0]
+
+However it's possible to override the length limit with a --max-field-length flag:
+
+    $ echo '{"msg": "test", "ver": "1.0.0", "val": "Lorem ipsum dolor sit amet."}' | jl --max-field-length 40
+    test [val=Lorem ipsum dolor sit amet. ver=1.0.0]
+
+You can also specify the fields, which should always be printed, no matter the length using the --include-fields flag:
 
     $ echo '{"msg": "test", "val": "Lorem ipsum dolor sit amet."}' | jl --include-fields val
     test [val=Lorem ipsum dolor sit amet.]
+
+For the opposite use-case, certain fields may be excluded from the output using the --exclude-fields flag:
+
+    $ echo '{"msg": "test", "ver": "1.0.0", "val": "42"}' | jl --exclude-fields ver
+    test [val=42]
+
+Note, --include-fields takes precedence over --exclude-fields

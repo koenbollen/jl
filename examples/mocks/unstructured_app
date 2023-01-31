@@ -1,0 +1,6 @@
+#!/bin/sh
+
+echo '22:39:49: Executing clean...'
+echo ''
+echo 'Task :clean'
+echo '{"message": "malformed json"'
