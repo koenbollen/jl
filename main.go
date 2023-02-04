@@ -7,6 +7,7 @@ import (
 	"io"
 	"math"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/koenbollen/jl/djson"
@@ -17,7 +18,7 @@ import (
 )
 
 func main() {
-	files, color, showPrefix, showSuffix, showFields, includeFields := cli()
+	files, color, showPrefix, showSuffix, showFields, includeFields, excludeFields, maxFieldLength := cli()
 	formatter, err := structure.NewFormatter(os.Stdout, "")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "invalid format: %v\n", err)
@@ -28,7 +29,9 @@ func main() {
 	formatter.ShowPrefix = showPrefix
 	formatter.ShowSuffix = showSuffix
 	formatter.ShowFields = showFields
+	formatter.MaxFieldLength = maxFieldLength
 	formatter.IncludeFields = includeFields
+	formatter.ExcludeFields = append(formatter.ExcludeFields, strings.Split(excludeFields, ",")...)
 
 	r, err := openFiles(files)
 	if err != nil {
@@ -46,7 +49,7 @@ func main() {
 		}
 
 		// unable to parse entry, outputting raw line:
-		if err != nil || entry.Message == "" {
+		if line.JSON == nil || err != nil {
 			writeBytes(line.Raw)
 			writeBytes(structure.NewLine)
 			continue

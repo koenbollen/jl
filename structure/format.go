@@ -26,7 +26,7 @@ var severityMapping = map[string]string{
 	"60":   "FATAL",
 }
 
-var fieldsToSkip = []string{
+var defaultExcludes = []string{
 	"@timestamp", "hostname", "level", "message", "msg", "name", "pid", "severity", "text", "time", "timestamp", "ts", "v",
 }
 
@@ -39,11 +39,13 @@ type Formatter struct {
 	output   io.Writer
 	template *template.Template
 
-	Colorize      bool
-	ShowFields    bool
-	ShowPrefix    bool
-	ShowSuffix    bool
-	IncludeFields string
+	Colorize       bool
+	ShowFields     bool
+	MaxFieldLength int
+	ShowPrefix     bool
+	ShowSuffix     bool
+	IncludeFields  string
+	ExcludeFields  []string
 }
 
 // NewFormatter compiles the given fmt as a go template and returns a Formatter
@@ -57,13 +59,15 @@ func NewFormatter(w io.Writer, fmt string) (*Formatter, error) {
 	}
 
 	return &Formatter{
-		output:        w,
-		template:      tmpl,
-		Colorize:      false,
-		ShowFields:    true,
-		ShowPrefix:    true,
-		ShowSuffix:    true,
-		IncludeFields: "",
+		output:         w,
+		template:       tmpl,
+		Colorize:       false,
+		ShowFields:     true,
+		MaxFieldLength: 30,
+		ShowPrefix:     true,
+		ShowSuffix:     true,
+		IncludeFields:  "",
+		ExcludeFields:  defaultExcludes,
 	}, nil
 }
 
@@ -183,11 +187,20 @@ func (f *Formatter) shouldSkipField(field, path string, value interface{}) bool 
 	if strings.Count(path, ".") > 1 { // Only include nested fields when the are in the IncludeFields
 		return true
 	}
-	if len(path+fmt.Sprintf("%v", value)) >= 30 {
+	if f.MaxFieldLength > 0 && len(path+fmt.Sprintf("%v", value)) >= f.MaxFieldLength {
 		return true
 	}
-	ix := sort.SearchStrings(fieldsToSkip, field)
-	return ix < len(fieldsToSkip) && fieldsToSkip[ix] == field
+
+	return contains(f.ExcludeFields, field)
+}
+
+func contains(lst []string, val string) bool {
+	for _, i := range lst {
+		if strings.EqualFold(i, val) {
+			return true
+		}
+	}
+	return false
 }
 
 func walkFields(fields map[string]interface{}, path string) map[string]interface{} {
