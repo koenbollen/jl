@@ -1,7 +1,6 @@
 # ![jl — JSON Logs](.github/logo.png)
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/koenbollen/jl)](https://goreportcard.com/report/github.com/koenbollen/jl)
-[![CircleCI](https://circleci.com/gh/koenbollen/jl.svg?style=shield)](https://circleci.com/gh/koenbollen/jl)
 
 **`jl` is a development tool for working with structured JSON logging.**
 
