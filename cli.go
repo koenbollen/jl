@@ -56,7 +56,7 @@ var version = "v1.5.0"
 
 func cli() (files []string, color, showPrefix, showSuffix, showFields bool, includeFields string, excludeFields string, maxFieldLength int) {
 	argv := append(os.Args[1:], strings.Split(os.Getenv("JL_OPTS"), " ")...)
-	arguments, err := docopt.Parse(usage, argv, true, "jl "+version, false)
+	arguments, err := docopt.ParseArgs(usage, argv, "jl "+version)
 	if err != nil {
 		panic(err)
 	}
