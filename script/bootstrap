@@ -8,3 +8,5 @@ command -v cram >/dev/null 2>&1 || {
 }
 
 go mod download
+
+go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.53.2

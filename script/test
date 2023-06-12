@@ -5,7 +5,6 @@ cd "$(dirname "$0")/.."
 go mod verify
 go test ./...
 
-curl -sfL "https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh" | sh -s -- -b "$(go env GOPATH)/bin" v1.18.0
 "$(go env GOPATH)/bin/golangci-lint" run ./...
 
 go install
