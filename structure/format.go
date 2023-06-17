@@ -164,7 +164,7 @@ func (f *Formatter) outputFields(entry *Entry, raw json.RawMessage) {
 			if _, ok := value.([]interface{}); ok {
 				continue
 			}
-			if !f.shouldSkipField(key, path+"."+key, value) {
+			if !f.shouldSkipField(entry, key, path+"."+key, value) {
 				switch v := value.(type) {
 				case float64:
 					output = append(output, key+"="+strconv.FormatFloat(v, 'f', -1, 64))
@@ -180,7 +180,7 @@ func (f *Formatter) outputFields(entry *Entry, raw json.RawMessage) {
 	}
 }
 
-func (f *Formatter) shouldSkipField(field, path string, value interface{}) bool {
+func (f *Formatter) shouldSkipField(entry *Entry, field, path string, value interface{}) bool {
 	if strings.Contains(f.IncludeFields, field) || strings.Contains(f.IncludeFields, path) {
 		return false
 	}
@@ -190,7 +190,9 @@ func (f *Formatter) shouldSkipField(field, path string, value interface{}) bool 
 	if f.MaxFieldLength > 0 && len(path+fmt.Sprintf("%v", value)) >= f.MaxFieldLength {
 		return true
 	}
-
+	if _, skip := entry.SkipFields[field]; skip {
+		return true
+	}
 	return contains(f.ExcludeFields, field)
 }
 
