@@ -66,8 +66,7 @@ func main() {
 
 		for _, processor := range processors.All {
 			if processor.Detect(line, entry) {
-				err = processor.Process(line, entry)
-				if err != nil {
+				if err := processor.Process(line, entry); err != nil {
 					fmt.Fprintf(os.Stderr, "failed to process message: %v\n", err)
 					os.Exit(1)
 				}
