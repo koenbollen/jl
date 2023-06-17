@@ -30,7 +30,7 @@ func (p *JournaldProcessor) Detect(line *stream.Line, entry *structure.Entry) bo
 
 func (p *JournaldProcessor) Process(line *stream.Line, entry *structure.Entry) error {
 	entry.Message = gjson.GetBytes(line.JSON, "MESSAGE").String()
-	entry.SkipFields["MESSAGE"] = true
+	entry.ExcludeFields = append(entry.ExcludeFields, "MESSAGE")
 
 	rawTimestamp := gjson.GetBytes(line.JSON, "__REALTIME_TIMESTAMP").String()
 	micro, err := strconv.ParseInt(rawTimestamp, 10, 64)
@@ -40,23 +40,23 @@ func (p *JournaldProcessor) Process(line *stream.Line, entry *structure.Entry) e
 		t := time.Unix(micro/1_000_000, micro%1_000_000*1_000).UTC()
 		entry.Timestamp = &t
 	}
-	entry.SkipFields["__REALTIME_TIMESTAMP"] = true
+	entry.ExcludeFields = append(entry.ExcludeFields, "__REALTIME_TIMESTAMP")
 
 	prioField := gjson.GetBytes(line.JSON, "PRIORITY")
 	switch prioField.Type {
 	case gjson.Number:
 		priority := prioField.Int()
 		entry.Severity = priorityMapping[priority]
-		entry.SkipFields["PRIORITY"] = true
+		entry.ExcludeFields = append(entry.ExcludeFields, "PRIORITY")
 	case gjson.String:
 		priority := prioField.String()
 		if i, err := strconv.ParseInt(priority, 10, 64); err == nil {
 			entry.Severity = priorityMapping[i]
-			entry.SkipFields["PRIORITY"] = true
+			entry.ExcludeFields = append(entry.ExcludeFields, "PRIORITY")
 			break
 		} else if len(priority) < 12 {
 			entry.Severity = strings.ToUpper(priority)
-			entry.SkipFields["PRIORITY"] = true
+			entry.ExcludeFields = append(entry.ExcludeFields, "PRIORITY")
 			break
 		}
 		fallthrough

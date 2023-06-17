@@ -184,13 +184,23 @@ func (f *Formatter) shouldSkipField(entry *Entry, field, path string, value inte
 	if strings.Contains(f.IncludeFields, field) || strings.Contains(f.IncludeFields, path) {
 		return false
 	}
-	if strings.Count(path, ".") > 1 { // Only include nested fields when the are in the IncludeFields
+	if contains(entry.IncludeFields, field) {
+		return true
+	}
+	if contains(entry.ExcludeFields, field) {
+		return true
+	}
+	if strings.Count(path, ".") > 1 {
+		first, _, _ := strings.Cut(strings.Trim(path, "."), ".")
+		if strings.Contains(f.IncludeFields, first) {
+			return false
+		}
+		if contains(entry.IncludeFields, first) {
+			return false
+		}
 		return true
 	}
 	if f.MaxFieldLength > 0 && len(path+fmt.Sprintf("%v", value)) >= f.MaxFieldLength {
-		return true
-	}
-	if _, skip := entry.SkipFields[field]; skip {
 		return true
 	}
 	return contains(f.ExcludeFields, field)

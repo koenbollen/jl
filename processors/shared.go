@@ -11,5 +11,6 @@ type Processor interface {
 }
 
 var All = []Processor{
+	&NestedProcessor{},
 	&JournaldProcessor{},
 }

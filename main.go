@@ -42,9 +42,7 @@ func main() {
 	s := stream.New(r)
 	for line := range s.Lines() {
 		var err error
-		entry := &structure.Entry{
-			SkipFields: make(map[string]bool),
-		}
+		entry := &structure.Entry{}
 		if line.JSON != nil && len(line.JSON) > 0 {
 			var unused interface{}
 			err = json.Unmarshal(line.JSON, &unused)

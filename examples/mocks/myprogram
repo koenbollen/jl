@@ -12,6 +12,9 @@ elif [ "$1" = "--complex" ]; then
 elif [ "$1" = "--no-message" ]; then
   echo '{"message": "", "severity": "trace", "timestamp": "2017-09-28T06:43:13Z", "user": "john"}'
   echo '{"msg": "", "severity": "error", "timestamp": "2017-09-28T06:43:14Z", "@version": "1.0.0"}'
+elif [ "$1" = "--nested-message" ]; then
+  echo '{"timestamp":"2022-02-15T18:47:10.821422Z","level":"INFO","fields":{"message":"shaving yaks","yaks":7},"target":"fmt_json","spans":{"yaks":7,"name":"shaving_yaks"}}'
+  echo '{"timestamp":"2022-02-15T18:47:10.821495Z","level":"TRACE","fields":{"message":"hello! Im gonna shave a yak","excitement":"yay!"},"target":"fmt_json","spans":{"yaks":7,"name":"shaving_yaks"}}'
 else
   echo '{"message": "Hello, world!!", "severity": "info"}'
   echo '{"message": "skipping file", "severity": "warn", "file": "empty.txt"}'
