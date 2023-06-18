@@ -31,7 +31,7 @@ func main() {
 	formatter.ShowSuffix = showSuffix
 	formatter.ShowFields = showFields
 	formatter.MaxFieldLength = maxFieldLength
-	formatter.IncludeFields = includeFields
+	formatter.IncludeFields = strings.Split(includeFields, ",")
 	formatter.ExcludeFields = append(formatter.ExcludeFields, strings.Split(excludeFields, ",")...)
 
 	r, err := openFiles(files)

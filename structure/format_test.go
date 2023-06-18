@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/koenbollen/jl/djson"
 	"github.com/koenbollen/jl/structure"
 )
 
@@ -68,13 +69,39 @@ func TestNestedFieldPaths(t *testing.T) {
 		t.Fatalf("failed to unmarshal logline: %v", err)
 	}
 
-	formatter.IncludeFields = "flat.root,meta.count"
+	formatter.IncludeFields = []string{"flat.root", "meta.count"}
 
 	err = formatter.Format(&entry, logline, nil, nil)
 	if err != nil {
 		t.Fatalf("failed to format entry: %v", err)
 	}
 	expect := "   INFO: Hi! [flat.root=yes meta.count=42]\n"
+	if buf.String() != expect {
+		t.Errorf("\n\tnot match: %q\n\t   expect: %q\n", buf.String(), expect)
+	}
+}
+
+func TestIncludePaths(t *testing.T) {
+	t.Parallel()
+
+	logline := []byte(`{"service":{"name":"gunicorn"},"@timestamp":"2020-10-23T03:35:49.324754+00:00","message":"Served","time":1603424149.3247535,"log":{"level":"INFO"},"request":{"scheme":"https","path":"/users/users/notices/","method":"GET","customer":"test"},"event":{"duration":78518000}}`)
+
+	buf := &bytes.Buffer{}
+	formatter, err := structure.NewFormatter(buf, "")
+	if err != nil {
+		t.Fatalf("failed to create new formatter: %v", err)
+	}
+
+	var entry structure.Entry
+	djson.Unmarshal(logline, &entry)
+
+	formatter.IncludeFields = []string{"request.method", "request.path", "event.duration"}
+
+	err = formatter.Format(&entry, logline, nil, nil)
+	if err != nil {
+		t.Fatalf("failed to format entry: %v", err)
+	}
+	expect := "[2020-10-23T03:35:49.324754+00:00]    INFO: Served [event.duration=78518000 request.method=GET request.path=/users/users/notices/]\n"
 	if buf.String() != expect {
 		t.Errorf("\n\tnot match: %q\n\t   expect: %q\n", buf.String(), expect)
 	}

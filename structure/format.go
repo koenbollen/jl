@@ -44,7 +44,7 @@ type Formatter struct {
 	MaxFieldLength int
 	ShowPrefix     bool
 	ShowSuffix     bool
-	IncludeFields  string
+	IncludeFields  []string
 	ExcludeFields  []string
 }
 
@@ -66,7 +66,6 @@ func NewFormatter(w io.Writer, fmt string) (*Formatter, error) {
 		MaxFieldLength: 30,
 		ShowPrefix:     true,
 		ShowSuffix:     true,
-		IncludeFields:  "",
 		ExcludeFields:  defaultExcludes,
 	}, nil
 }
@@ -181,18 +180,18 @@ func (f *Formatter) outputFields(entry *Entry, raw json.RawMessage) {
 }
 
 func (f *Formatter) shouldSkipField(entry *Entry, field, path string, value interface{}) bool {
-	if strings.Contains(f.IncludeFields, field) || strings.Contains(f.IncludeFields, path) {
+	if contains(f.IncludeFields, field) || contains(f.IncludeFields, path) {
 		return false
 	}
 	if contains(entry.IncludeFields, field) {
-		return true
+		return false
 	}
 	if contains(entry.ExcludeFields, field) {
 		return true
 	}
 	if strings.Count(path, ".") > 1 {
 		first, _, _ := strings.Cut(strings.Trim(path, "."), ".")
-		if strings.Contains(f.IncludeFields, first) {
+		if contains(f.IncludeFields, first) {
 			return false
 		}
 		if contains(entry.IncludeFields, first) {
