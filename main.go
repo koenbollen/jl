@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/koenbollen/jl/djson"
+	"github.com/koenbollen/jl/processors"
 	"github.com/koenbollen/jl/stream"
 	"github.com/koenbollen/jl/structure"
 
@@ -41,7 +42,9 @@ func main() {
 	s := stream.New(r)
 	for line := range s.Lines() {
 		var err error
-		entry := &structure.Entry{}
+		entry := &structure.Entry{
+			SkipFields: make(map[string]bool),
+		}
 		if line.JSON != nil && len(line.JSON) > 0 {
 			var unused interface{}
 			err = json.Unmarshal(line.JSON, &unused)
@@ -59,6 +62,15 @@ func main() {
 			sec, dec := math.Modf(entry.FloatTimestamp)
 			t := time.Unix(int64(sec), int64(dec*(1e9))).UTC()
 			entry.Timestamp = &t
+		}
+
+		for _, processor := range processors.All {
+			if processor.Detect(line, entry) {
+				if err := processor.Process(line, entry); err != nil {
+					fmt.Fprintf(os.Stderr, "failed to process message: %v\n", err)
+					os.Exit(1)
+				}
+			}
 		}
 
 		// Passing entry to formatter to output:
