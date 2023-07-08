@@ -140,3 +140,25 @@ func TestDoubleNestedType(t *testing.T) {
 		t.Error("failed to set .Level from nested path")
 	}
 }
+
+func TestWildcardNested(t *testing.T) {
+	t.Parallel()
+	val := struct {
+		Message string `djson:"message,*.message"`
+	}{}
+
+	djson.Unmarshal([]byte(`{"fields.message": "Hello"}`), &val)
+	if val.Message != "Hello" {
+		t.Error("failed to set .Message from static flat path")
+	}
+
+	djson.Unmarshal([]byte(`{"fields": {"message": "Hello"}}`), &val)
+	if val.Message != "Hello" {
+		t.Error("failed to set .Message from nested path")
+	}
+
+	djson.Unmarshal([]byte(`{"message": "First", "fields.message": "Second"}`), &val)
+	if val.Message != "First" {
+		t.Error("failed to set .Message from first key")
+	}
+}

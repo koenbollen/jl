@@ -31,7 +31,7 @@ func main() {
 	formatter.ShowSuffix = showSuffix
 	formatter.ShowFields = showFields
 	formatter.MaxFieldLength = maxFieldLength
-	formatter.IncludeFields = includeFields
+	formatter.IncludeFields = strings.Split(includeFields, ",")
 	formatter.ExcludeFields = append(formatter.ExcludeFields, strings.Split(excludeFields, ",")...)
 
 	r, err := openFiles(files)
@@ -42,9 +42,7 @@ func main() {
 	s := stream.New(r)
 	for line := range s.Lines() {
 		var err error
-		entry := &structure.Entry{
-			SkipFields: make(map[string]bool),
-		}
+		entry := &structure.Entry{}
 		if line.JSON != nil && len(line.JSON) > 0 {
 			var unused interface{}
 			err = json.Unmarshal(line.JSON, &unused)

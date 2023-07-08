@@ -3,6 +3,7 @@ package processors
 import (
 	"bytes"
 	"encoding/json"
+	"sort"
 	"testing"
 	"time"
 
@@ -43,7 +44,7 @@ func TestJournald_Happypath(t *testing.T) {
 	_ = json.Compact(raw, []byte(in))
 
 	line := &stream.Line{Raw: raw.Bytes(), JSON: raw.Bytes()}
-	entry := &structure.Entry{SkipFields: make(map[string]bool)}
+	entry := &structure.Entry{}
 	djson.Unmarshal(line.JSON, entry)
 
 	p := &JournaldProcessor{}
@@ -70,15 +71,15 @@ func TestJournald_Happypath(t *testing.T) {
 		t.Errorf("entry.Severity = %v, want %v", got, want)
 	}
 
-	if got, want := entry.SkipFields["MESSAGE"], true; got != want {
+	if got, want := has(entry.ExcludeFields, "MESSAGE"), true; got != want {
 		t.Errorf("entry.SkipFields['MESSAGE'] = %v, want %v", got, want)
 	}
 
-	if got, want := entry.SkipFields["__REALTIME_TIMESTAMP"], true; got != want {
+	if got, want := has(entry.ExcludeFields, "__REALTIME_TIMESTAMP"), true; got != want {
 		t.Errorf("entry.SkipFields['__REALTIME_TIMESTAMP'] = %v, want %v", got, want)
 	}
 
-	if got, want := entry.SkipFields["PRIORITY"], true; got != want {
+	if got, want := has(entry.ExcludeFields, "PRIORITY"), true; got != want {
 		t.Errorf("entry.SkipFields['PRIORITY'] = %v, want %v", got, want)
 	}
 }
@@ -116,7 +117,7 @@ func TestJournald_PriorityString(t *testing.T) {
 		t.Errorf("entry.Severity = %v, want %v", got, want)
 	}
 
-	if got, want := entry.SkipFields["PRIORITY"], true; got != want {
+	if got, want := has(entry.ExcludeFields, "PRIORITY"), true; got != want {
 		t.Errorf("entry.SkipFields['PRIORITY'] = %v, want %v", got, want)
 	}
 }
@@ -135,7 +136,7 @@ func TestJournald_PriorityInt(t *testing.T) {
 		t.Errorf("entry.Severity = %v, want %v", got, want)
 	}
 
-	if got, want := entry.SkipFields["PRIORITY"], true; got != want {
+	if got, want := has(entry.ExcludeFields, "PRIORITY"), true; got != want {
 		t.Errorf("entry.SkipFields['PRIORITY'] = %v, want %v", got, want)
 	}
 }
@@ -154,7 +155,7 @@ func TestJournald_InvalidPriority(t *testing.T) {
 		t.Errorf("entry.Severity = %v, want %v", got, want)
 	}
 
-	if got, want := entry.SkipFields["PRIORITY"], false; got != want {
+	if got, want := has(entry.ExcludeFields, "PRIORITY"), false; got != want {
 		t.Errorf("entry.SkipFields['PRIORITY'] = %v, want %v", got, want)
 	}
 }
@@ -166,7 +167,7 @@ func process(t *testing.T, input string) *structure.Entry {
 	_ = json.Compact(raw, []byte(input))
 
 	line := &stream.Line{Raw: raw.Bytes(), JSON: raw.Bytes()}
-	entry := &structure.Entry{SkipFields: make(map[string]bool)}
+	entry := &structure.Entry{}
 	djson.Unmarshal(line.JSON, entry)
 
 	p := &JournaldProcessor{}
@@ -182,4 +183,10 @@ func process(t *testing.T, input string) *structure.Entry {
 	}
 
 	return entry
+}
+
+func has(slice []string, s string) bool {
+	sort.Strings(slice)
+	ix := sort.SearchStrings(slice, s)
+	return ix < len(slice) && slice[ix] == s
 }

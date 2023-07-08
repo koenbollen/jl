@@ -29,7 +29,9 @@ func process(data []byte, val interface{}, elem reflect.Type, i int) {
 	if !ok {
 		return
 	}
-	for _, key := range strings.Split(keys, ",") {
+	keylist := strings.Split(keys, ",")
+	reverse(keylist) // to prioritize the keys in the beginning of the list
+	for _, key := range keylist {
 		result := gjson.GetBytes(data, strings.TrimSpace(key))
 		if !result.Exists() {
 			result = gjson.GetBytes(data, strings.ReplaceAll(strings.TrimSpace(key), ".", "\\."))
@@ -66,4 +68,10 @@ func convert(value, field reflect.Value) reflect.Value {
 		}
 	}
 	return reflect.ValueOf(nil)
+}
+
+func reverse[S ~[]T, T any](s S) {
+	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+		s[i], s[j] = s[j], s[i]
+	}
 }
