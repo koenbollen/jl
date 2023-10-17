@@ -65,16 +65,9 @@ Output Options:
 
 Formatting Options:
   --skip-fields     Don't output misc json keys as fields
-  --max-field-length <int>
-                    Any field, exceeding the given length (including
-                    field name) will be ommitted from output. Use 0
-                    to remove the length limit [default: 30]
-  --include-fields <fields>, -f <fields>
-                    Always include these json keys as fields, no matter
-                    the length (comma separated list)
-  --exclude-fields <fields>
-                    Always exclude these json keys (comma separated
-                    list)
+  --max-field-length <int> Any field, exceeding the given length (including field name) will be ommitted from output. Use 0 to remove the length limit [default: 30]
+  --include-fields <fields>, -f <fields> Always include these json keys as fields, no matter the length (comma separated list)
+  --exclude-fields <fields> Always exclude these json keys (comma separated list)
 
 You can add any option to the JL_OPTS environment variable, ex:
   export JL_OPTS="--no-color"
